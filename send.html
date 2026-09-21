@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>SEND</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #111;
+            color: white;
+            text-align: center;
+            padding-top: 100px;
+        }
+
+        input {
+            width: 300px;
+            padding: 15px;
+            font-size: 20px;
+            border-radius: 8px;
+            border: none;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 15px 40px;
+            font-size: 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        #status {
+            margin-top: 20px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+
+<body>
+
+<h1>SEND</h1>
+
+<input
+    id="value"
+    type="text"
+    placeholder="Wpisz wartość"
+>
+
+<br>
+
+<button onclick="sendValue()">WYŚLIJ</button>
+
+<div id="status"></div>
+
+<script>
+async function sendValue() {
+
+    const value = document.getElementById("value").value;
+
+    try {
+
+        const response = await fetch("/api/send", {
+            method: "POST",
+
+            headers: {
+                "Content-Type": "application/json"
+            },
+
+            body: JSON.stringify({
+                value: value
+            })
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+
+            document.getElementById("status").textContent =
+                "Wysłano: " + result.value;
+
+        } else {
+
+            document.getElementById("status").textContent =
+                "Błąd: " + result.error;
+        }
+
+    } catch (error) {
+
+        document.getElementById("status").textContent =
+            "Błąd połączenia: " + error;
+    }
+}
+</script>
+
+</body>
+</html>

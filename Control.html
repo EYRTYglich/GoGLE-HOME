@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>BIT CONTROL</title>
+
+    <style>
+
+        body {
+            margin: 0;
+            background: #111;
+            color: white;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 30px 15px;
+        }
+
+        h1 {
+            font-size: 36px;
+            margin-bottom: 25px;
+        }
+
+        #editButton {
+            padding: 12px 25px;
+            font-size: 18px;
+            font-weight: bold;
+
+            background: #333;
+            color: white;
+
+            border: none;
+            border-radius: 10px;
+
+            cursor: pointer;
+        }
+
+        #editButton:hover {
+            background: #444;
+        }
+
+        .items {
+            max-width: 600px;
+            margin: 30px auto;
+        }
+
+        .item {
+            background: #222;
+            border-radius: 15px;
+
+            margin: 12px 0;
+            padding: 15px 20px;
+
+            display: flex;
+            align-items: center;
+
+            gap: 12px;
+        }
+
+        .number {
+            width: 25px;
+            color: #888;
+            font-size: 18px;
+        }
+
+        .name {
+            flex: 1;
+            text-align: left;
+
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .nameInput {
+            flex: 1;
+            min-width: 0;
+
+            padding: 10px;
+
+            background: #333;
+            color: white;
+
+            border: 1px solid #555;
+            border-radius: 8px;
+
+            font-size: 18px;
+        }
+
+        .binary {
+            font-family: monospace;
+            font-size: 14px;
+            color: #888;
+            width: 80px;
+        }
+
+        .typeButton {
+            display: none;
+
+            padding: 8px 12px;
+
+            background: #444;
+            color: white;
+
+            border: none;
+            border-radius: 8px;
+
+            cursor: pointer;
+        }
+
+        .typeButton:hover {
+            background: #555;
+        }
+
+        /* SWITCH */
+
+        .switch {
+            position: relative;
+
+            width: 70px;
+            height: 38px;
+
+            flex-shrink: 0;
+        }
+
+        .switch input {
+            opacity: 0;
+
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+
+            inset: 0;
+
+            background: #444;
+
+            border-radius: 40px;
+
+            cursor: pointer;
+
+            transition: 0.2s;
+        }
+
+        .slider:before {
+            content: "";
+
+            position: absolute;
+
+            width: 30px;
+            height: 30px;
+
+            left: 4px;
+            top: 4px;
+
+            background: white;
+
+            border-radius: 50%;
+
+            transition: 0.2s;
+        }
+
+        .switch input:checked + .slider {
+            background: #2196F3;
+        }
+
+        .switch input:checked + .slider:before {
+            transform: translateX(32px);
+        }
+
+        /* BUTTON */
+
+        .actionButton {
+            display: none;
+
+            padding: 12px 20px;
+
+            background: #333;
+            color: white;
+
+            border: none;
+            border-radius: 10px;
+
+            font-size: 18px;
+            font-weight: bold;
+
+            cursor: pointer;
+        }
+
+        .actionButton:hover {
+            background: #444;
+        }
+
+        .actionButton:active {
+            background: #666;
+            transform: scale(0.95);
+        }
+
+        #status {
+            margin-top: 30px;
+            font-size: 20px;
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<h1>BIT CONTROL</h1>
+
+
+<button
+    id="editButton"
+    onclick="toggleEdit()">
+
+    EDIT
+
+</button>
+
+
+
+<div class="items">
+
+
+    <!-- ITEM 1 -->
+
+    <div class="item">
+
+        <span class="number">
+            1
+        </span>
+
+        <span
+            class="name"
+            id="label1">
+
+            SWITCH 1
+
+        </span>
+
+        <input
+            class="nameInput"
+            id="input1"
+            value="SWITCH 1"
+            style="display:none;">
+
+        <span class="binary">
+            00000001
+        </span>
+
+        <button
+            class="typeButton"
+            id="type1"
+            onclick="changeType(0)">
+
+            CHANGE TO BUTTON
+
+        </button>
+
+        <label
+            class="switch"
+            id="switchContainer1">
+
+            <input
+                type="checkbox"
+                id="switch1"
+                onchange="switchChanged(0, this.checked)">
+
+            <span class="slider"></span>
+
+        </label>
+
+        <button
+            class="actionButton"
+            id="button1"
+            onclick="buttonPressed(0)">
+
+            SWITCH 1
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ITEM 2 -->
+
+    <div class="item">
+
+        <span class="number">
+            2
+        </span>
+
+        <span
+            class="name"
+            id="label2">
+
+            SWITCH 2
+
+        </span>
+
+        <input
+            class="nameInput"
+            id="input2"
+            value="SWITCH 2"
+            style="display:none;">
+
+        <span class="binary">
+            00000010
+        </span>
+
+        <button
+            class="typeButton"
+            id="type2"
+            onclick="changeType(1)">
+
+            CHANGE TO BUTTON
+
+        </button>
+
+        <label
+            class="switch"
+            id="switchContainer2">
+
+            <input
+                type="checkbox"
+                id="switch2"
+                onchange="switchChanged(1, this.checked)">
+
+            <span class="slider"></span>
+
+        </label>
+
+        <button
+            class="actionButton"
+            id="button2"
+            onclick="buttonPressed(1)">
+
+            SWITCH 2
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ITEM 3 -->
+
+    <div class="item">
+
+        <span class="number">
+            3
+        </span>
+
+        <span
+            class="name"
+            id="label3">
+
+            SWITCH 3
+
+        </span>
+
+        <input
+            class="nameInput"
+            id="input3"
+            value="SWITCH 3"
+            style="display:none;">
+
+        <span class="binary">
+            00000100
+        </span>
+
+        <button
+            class="typeButton"
+            id="type3"
+            onclick="changeType(2)">
+
+            CHANGE TO BUTTON
+
+        </button>
+
+        <label
+            class="switch"
+            id="switchContainer3">
+
+            <input
+                type="checkbox"
+                id="switch3"
+                onchange="switchChanged(2, this.checked)">
+
+            <span class="slider"></span>
+
+        </label>
+
+        <button
+            class="actionButton"
+            id="button3"
+            onclick="buttonPressed(2)">
+
+            SWITCH 3
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ITEM 4 -->
+
+    <div class="item">
+
+        <span class="number">
+            4
+        </span>
+
+        <span
+            class="name"
+            id="label4">
+
+            SWITCH 4
+
+        </span>
+
+        <input
+            class="nameInput"
+            id="input4"
+            value="SWITCH 4"
+            style="display:none;">
+
+        <span class="binary">
+            00001000
+        </span>
+
+        <button
+            class="typeButton"
+            id="type4"
+            onclick="changeType(3)">
+
+            CHANGE TO BUTTON
+
+        </button>
+
+        <label
+            class="switch"
+            id="switchContainer4">
+
+            <input
+                type="checkbox"
+                id="switch4"
+                onchange="switchChanged(3, this.checked)">
+
+            <span class="slider"></span>
+
+        </label>
+
+        <button
+            class="actionButton"
+            id="button4"
+            onclick="buttonPressed(3)">
+
+            SWITCH 4
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ITEM 5 -->
+
+    <div class="item">
+
+        <span class="number">
+            5
+        </span>
+
+        <span
+            class="name"
+            id="label5">
+
+            SWITCH 5
+
+        </span>
+
+        <input
+            class="nameInput"
+            id="input5"
+            value="SWITCH 5"
+            style="display:none;">
+
+        <span class="binary">
+            00010000
+        </span>
+
+        <button
+            class="typeButton"
+            id="type5"
+            onclick="changeType(4)">
+
+            CHANGE TO BUTTON
+
+        </button>
+
+        <label
+            class="switch"
+            id="switchContainer5">
+
+            <input
+                type="checkbox"
+                id="switch5"
+                onchange="switchChanged(4, this.checked)">
+
+            <span class="slider"></span>
+
+        </label>
+
+        <button
+            class="actionButton"
+            id="button5"
+            onclick="buttonPressed(4)">
+
+            SWITCH 5
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ITEM 6 -->
+
+    <div class="item">
+
+        <span class="number">
+            6
+        </span>
+
+        <span
+            class="name"
+            id="label6">
+
+            SWITCH 6
+
+        </span>
+
+        <input
+            class="nameInput"
+            id="input6"
+            value="SWITCH 6"
+            style="display:none;">
+
+        <span class="binary">
+            00100000
+        </span>
+
+        <button
+            class="typeButton"
+            id="type6"
+            onclick="changeType(5)">
+
+            CHANGE TO BUTTON
+
+        </button>
+
+        <label
+            class="switch"
+            id="switchContainer6">
+
+            <input
+                type="checkbox"
+                id="switch6"
+                onchange="switchChanged(5, this.checked)">
+
+            <span class="slider"></span>
+
+        </label>
+
+        <button
+            class="actionButton"
+            id="button6"
+            onclick="buttonPressed(5)">
+
+            SWITCH 6
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ITEM 7 -->
+
+    <div class="item">
+
+        <span class="number">
+            7
+        </span>
+
+        <span
+            class="name"
+            id="label7">
+
+            SWITCH 7
+
+        </span>
+
+        <input
+            class="nameInput"
+            id="input7"
+            value="SWITCH 7"
+            style="display:none;">
+
+        <span class="binary">
+            01000000
+        </span>
+
+        <button
+            class="typeButton"
+            id="type7"
+            onclick="changeType(6)">
+
+            CHANGE TO BUTTON
+
+        </button>
+
+        <label
+            class="switch"
+            id="switchContainer7">
+
+            <input
+                type="checkbox"
+                id="switch7"
+                onchange="switchChanged(6, this.checked)">
+
+            <span class="slider"></span>
+
+        </label>
+
+        <button
+            class="actionButton"
+            id="button7"
+            onclick="buttonPressed(6)">
+
+            SWITCH 7
+
+        </button>
+
+    </div>
+
+
+
+    <!-- ITEM 8 -->
+
+    <div class="item">
+
+        <span class="number">
+            8
+        </span>
+
+        <span
+            class="name"
+            id="label8">
+
+            SWITCH 8
+
+        </span>
+
+        <input
+            class="nameInput"
+            id="input8"
+            value="SWITCH 8"
+            style="display:none;">
+
+        <span class="binary">
+            10000000
+        </span>
+
+        <button
+            class="typeButton"
+            id="type8"
+            onclick="changeType(7)">
+
+            CHANGE TO BUTTON
+
+        </button>
+
+        <label
+            class="switch"
+            id="switchContainer8">
+
+            <input
+                type="checkbox"
+                id="switch8"
+                onchange="switchChanged(7, this.checked)">
+
+            <span class="slider"></span>
+
+        </label>
+
+        <button
+            class="actionButton"
+            id="button8"
+            onclick="buttonPressed(7)">
+
+            SWITCH 8
+
+        </button>
+
+    </div>
+
+</div>
+
+
+
+<div id="status">
+    Ready
+</div>
+
+
+
+<script>
+
+let switches = [
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false,
+    false
+];
+
+
+let types = [
+    "switch",
+    "switch",
+    "switch",
+    "switch",
+    "switch",
+    "switch",
+    "switch",
+    "switch"
+];
+
+
+let editing = false;
+
+
+/* =========================
+   EDIT MODE
+   ========================= */
+
+function toggleEdit() {
+
+    editing = !editing;
+
+    const editButton =
+        document.getElementById("editButton");
+
+
+    for (let i = 1; i <= 8; i++) {
+
+        const label =
+            document.getElementById("label" + i);
+
+        const input =
+            document.getElementById("input" + i);
+
+        const typeButton =
+            document.getElementById("type" + i);
+
+
+        if (editing) {
+
+            label.style.display = "none";
+
+            input.style.display = "block";
+
+            typeButton.style.display =
+                "block";
+
+        } else {
+
+            let name =
+                input.value.trim();
+
+
+            if (name === "") {
+
+                name =
+                    "SWITCH " + i;
+
+            }
+
+
+            label.textContent =
+                name;
+
+            label.style.display =
+                "block";
+
+            input.style.display =
+                "none";
+
+            typeButton.style.display =
+                "none";
+
+
+            localStorage.setItem(
+                "name" + i,
+                name
+            );
+
+            localStorage.setItem(
+                "type" + i,
+                types[i - 1]
+            );
+
+
+            updateButtonName(
+                i,
+                name
+            );
+
+        }
+
+    }
+
+
+    if (editing) {
+
+        editButton.textContent =
+            "SAVE";
+
+        document.getElementById("status")
+            .textContent =
+                "Edit mode";
+
+    } else {
+
+        editButton.textContent =
+            "EDIT";
+
+        document.getElementById("status")
+            .textContent =
+                "Saved";
+
+    }
+
+}
+
+
+/* =========================
+   CHANGE TYPE
+   ========================= */
+
+function changeType(index) {
+
+    if (types[index] === "switch") {
+
+        types[index] = "button";
+
+    } else {
+
+        types[index] = "switch";
+
+    }
+
+
+    updateType(index);
+
+
+    localStorage.setItem(
+        "type" + (index + 1),
+        types[index]
+    );
+
+}
+
+
+/* =========================
+   UPDATE TYPE
+   ========================= */
+
+function updateType(index) {
+
+    const number =
+        index + 1;
+
+
+    const switchContainer =
+        document.getElementById(
+            "switchContainer" + number
+        );
+
+
+    const actionButton =
+        document.getElementById(
+            "button" + number
+        );
+
+
+    const typeButton =
+        document.getElementById(
+            "type" + number
+        );
+
+
+    const name =
+        document.getElementById(
+            "label" + number
+        ).textContent;
+
+
+    if (types[index] === "switch") {
+
+        switchContainer.style.display =
+            "block";
+
+        actionButton.style.display =
+            "none";
+
+        typeButton.textContent =
+            "CHANGE TO BUTTON";
+
+    } else {
+
+        switchContainer.style.display =
+            "none";
+
+        actionButton.style.display =
+            "block";
+
+        actionButton.textContent =
+            name;
+
+        typeButton.textContent =
+            "CHANGE TO SWITCH";
+
+    }
+
+}
+
+
+/* =========================
+   UPDATE BUTTON NAME
+   ========================= */
+
+function updateButtonName(number, name) {
+
+    const button =
+        document.getElementById(
+            "button" + number
+        );
+
+    button.textContent =
+        name;
+
+}
+
+
+/* =========================
+   SWITCH
+   ========================= */
+
+function switchChanged(index, enabled) {
+
+    switches[index] =
+        enabled;
+
+    sendCurrentValue();
+
+}
+
+
+/* =========================
+   BUTTON
+   ========================= */
+
+function buttonPressed(index) {
+
+    let value = (1 << index);
+
+    const binary =
+        value
+        .toString(2)
+        .padStart(8, "0");
+
+    // Wyślij przycisk
+    sendValue(binary);
+
+    // Po 0.5 sekundy wróć do 00000000
+    setTimeout(() => {
+
+        sendValue("00000000");
+
+    }, 500);
+}
+
+/* =========================
+   CURRENT SWITCH VALUE
+   ========================= */
+
+function sendCurrentValue() {
+
+    let value = 0;
+
+
+    for (let i = 0; i < 8; i++) {
+
+        if (switches[i]) {
+
+            value |=
+                (1 << i);
+
+        }
+
+    }
+
+
+    const binary =
+        value
+        .toString(2)
+        .padStart(8, "0");
+
+
+    sendValue(binary);
+
+}
+
+
+/* =========================
+   API
+   ========================= */
+
+async function sendValue(value) {
+
+    document.getElementById("status")
+        .textContent =
+            "Sending...";
+
+
+    try {
+
+        const response =
+            await fetch(
+                "/api/send",
+                {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body:
+                        JSON.stringify({
+                            value: value
+                        })
+
+                }
+            );
+
+
+        const result =
+            await response.json();
+
+
+        if (result.success) {
+
+            document.getElementById("status")
+                .textContent =
+                    "Sent: " +
+                    result.value;
+
+        } else {
+
+            document.getElementById("status")
+                .textContent =
+                    "Error: " +
+                    result.error;
+
+        }
+
+
+    } catch (error) {
+
+        document.getElementById("status")
+            .textContent =
+                "Connection error";
+
+    }
+
+}
+
+
+/* =========================
+   LOAD SETTINGS
+   ========================= */
+
+function loadSettings() {
+
+    for (let i = 1; i <= 8; i++) {
+
+        const savedName =
+            localStorage.getItem(
+                "name" + i
+            );
+
+
+        const savedType =
+            localStorage.getItem(
+                "type" + i
+            );
+
+
+        if (savedName !== null) {
+
+            document.getElementById(
+                "label" + i
+            ).textContent =
+                savedName;
+
+
+            document.getElementById(
+                "input" + i
+            ).value =
+                savedName;
+
+
+            updateButtonName(
+                i,
+                savedName
+            );
+
+        }
+
+
+        if (
+            savedType === "button" ||
+            savedType === "switch"
+        ) {
+
+            types[i - 1] =
+                savedType;
+
+        }
+
+
+        updateType(i - 1);
+
+    }
+
+}
+
+
+loadSettings();
+
+</script>
+
+</body>
+</html>
