@@ -16,6 +16,22 @@ value_lock = threading.Lock()
 
 
 # =========================
+# PRZEŁĄCZNIKI
+# =========================
+
+SWITCHES = {
+    "switch_1": "00000001",
+    "switch_2": "00000010",
+    "switch_3": "00000100",
+    "switch_4": "00001000",
+    "switch_5": "00010000",
+    "switch_6": "00100000",
+    "switch_7": "01000000",
+    "switch_8": "10000000"
+}
+
+
+# =========================
 # STRONA GŁÓWNA
 # =========================
 
@@ -115,9 +131,12 @@ def fakeauth():
 
     code = "test_auth_code"
 
+    separator = "&" if "?" in redirect_uri else "?"
+
     return redirect(
         redirect_uri
-        + "?code="
+        + separator
+        + "code="
         + code
         + "&state="
         + (state or "")
@@ -162,6 +181,8 @@ def faketoken():
 @app.route("/google/smarthome", methods=["POST"])
 def google_smarthome():
 
+    global value
+
     data = request.get_json(silent=True)
 
     if not data:
@@ -169,9 +190,15 @@ def google_smarthome():
             "error": "Brak JSON"
         }), 400
 
-    request_id = data.get("requestId", "unknown")
+    request_id = data.get(
+        "requestId",
+        "unknown"
+    )
 
-    inputs = data.get("inputs", [])
+    inputs = data.get(
+        "inputs",
+        []
+    )
 
     if not inputs:
         return jsonify({
@@ -185,6 +212,7 @@ def google_smarthome():
     print("GOOGLE HOME")
     print("INTENT:", intent)
     print("================================")
+
 
     # =========================
     # SYNC
@@ -207,14 +235,14 @@ def google_smarthome():
 
                 "name": {
                     "defaultNames": [
-                        "Switch " + str(number)
+                        "Przelacznik " + str(number)
                     ],
 
-                    "name": "Switch " + str(number),
+                    "name": "Przelacznik " + str(number),
 
                     "nicknames": [
                         str(number),
-                        "switch " + str(number)
+                        "przelacznik " + str(number)
                     ]
                 },
 
@@ -238,12 +266,10 @@ def google_smarthome():
 
     if intent == "action.devices.QUERY":
 
-        device_ids = inputs[0].get(
-            "payload",
-            {}
-        ).get(
-            "devices",
-            []
+        device_ids = (
+            inputs[0]
+            .get("payload", {})
+            .get("devices", [])
         )
 
         with value_lock:
@@ -255,28 +281,12 @@ def google_smarthome():
 
             device_id = device.get("id")
 
-            if not device_id:
+            if device_id not in SWITCHES:
                 continue
-
-            try:
-                number = int(
-                    device_id.replace(
-                        "switch_",
-                        ""
-                    )
-                )
-
-            except:
-                continue
-
-            if number < 1 or number > 8:
-                continue
-
-            bit = "0" * (number - 1) + "1" + "0" * (8 - number)
 
             devices[device_id] = {
                 "online": True,
-                "on": current_value == bit
+                "on": current_value == SWITCHES[device_id]
             }
 
         return jsonify({
@@ -294,12 +304,10 @@ def google_smarthome():
 
     if intent == "action.devices.EXECUTE":
 
-        commands = inputs[0].get(
-            "payload",
-            {}
-        ).get(
-            "commands",
-            []
+        commands = (
+            inputs[0]
+            .get("payload", {})
+            .get("commands", [])
         )
 
         results = []
@@ -338,41 +346,16 @@ def google_smarthome():
 
                     device_id = device.get("id")
 
-                    if not device_id:
+                    if device_id not in SWITCHES:
                         continue
-
-                    try:
-                        number = int(
-                            device_id.replace(
-                                "switch_",
-                                ""
-                            )
-                        )
-
-                    except:
-                        continue
-
-                    if number < 1 or number > 8:
-                        continue
-
-                    # 1 = 00000001
-                    # 2 = 00000010
-                    # ...
-                    # 8 = 10000000
 
                     if requested_state:
 
-                        new_value = (
-                            "0" * (number - 1)
-                            + "1"
-                            + "0" * (8 - number)
-                        )
+                        new_value = SWITCHES[device_id]
 
                     else:
 
                         new_value = "00000000"
-
-                    global value
 
                     with value_lock:
                         value = new_value
@@ -428,16 +411,32 @@ def google_smarthome():
 
 
 # =========================
-# START SERWERA
+# HEALTH CHECK
+# =========================
+
+@app.route("/health", methods=["GET"])
+def health():
+
+    return jsonify({
+        "status": "ok",
+        "server": "Render",
+        "port": 10000
+    })
+
+
+# =========================
+# START
 # =========================
 
 if __name__ == "__main__":
+
+    port = 10000
 
     print("================================")
     print("SERVER STARTED")
     print("================================")
 
-    print("PORT: 10000")
+    print("PORT:", port)
 
     print("HOME:")
     print("http://127.0.0.1:10000/")
@@ -460,10 +459,13 @@ if __name__ == "__main__":
     print("GOOGLE HOME:")
     print("http://127.0.0.1:10000/google/smarthome")
 
+    print("HEALTH:")
+    print("http://127.0.0.1:10000/health")
+
     print("================================")
 
     app.run(
         host="0.0.0.0",
-        port=10000,
+        port=port,
         debug=False
     )
