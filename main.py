@@ -126,18 +126,18 @@ if __name__ == "__main__":
     print("================================")
 
     print("SEND:")
-    print("http://127.0.0.1:5000/")
+    print("http://127.0.0.1:10000/")
 
     print("CONTROL:")
-    print("http://127.0.0.1:5000/control.html")
+    print("http://127.0.0.1:10000/control.html")
 
     print("API VALUE:")
-    print("http://127.0.0.1:5000/api/value")
+    print("http://127.0.0.1:10000/api/value")
 
     print("================================")
 
     app.run(
         host="0.0.0.0",
-        port=5000,
+        port=10000,
         debug=False
     )
